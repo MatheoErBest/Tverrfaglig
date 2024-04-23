@@ -41,6 +41,8 @@ def playGame():
             square_x -= speed
         if keys[pygame.K_d]:
             square_x += speed
+        if keys[pygame.K_ESCAPE]:
+            pygame.QUIT()
 
         # Sørger for at firkanten ikke går utenfor vinduet
         square_x = max(0, min(square_x, WINDOW_WIDTH - square_width))
@@ -115,6 +117,8 @@ while Running:
                 elif event.key == pygame.K_UP:
                     selectedOptionItem = (selectedOptionItem - 1) % len(optionMenuItems)
                 elif event.key == pygame.K_RETURN:
+                    if selectedOptionItem == 0:
+                        changeRes()
                     if selectedOptionItem == 3:  # Back option selected
                         in_options_menu = False
 
