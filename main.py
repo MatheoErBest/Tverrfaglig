@@ -1,5 +1,21 @@
 import pygame
+import pymysql
 import sys
+
+#database
+conn = pymysql.connect(
+    host = '127.0.0.1',
+    user = 'matheo',
+    password = '123Akademiet',
+    database = 'score',
+)
+
+try:
+    with conn.cursor() as cursor:
+        pass
+    
+finally:
+    conn.close()
 
 # Funksjon for å starte spillet
 def playGame():
