@@ -2,6 +2,44 @@ import pygame
 import pymysql
 import sys
 
+def show_popup(screen):
+    input_box = pygame.Rect(100, 100, 140, 32)
+    color_inactive = pygame.Color('lightskyblue3')
+    color_active = pygame.Color('dodgerblue2')
+    color = color_inactive
+    active = False
+    text = ''
+    done = False
+
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if input_box.collidepoint(event.pos):
+                    active = not active
+                else:
+                    active = False
+                color = color_active if active else color_inactive
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        done = True
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
+
+        screen.fill((30, 30, 30))
+        txt_surface = pygame.font.Font(None, 32).render(text, True, color)
+        width = max(200, txt_surface.get_width()+10)
+        input_box.w = width
+        screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
+        pygame.draw.rect(screen, color, input_box, 2)
+        pygame.display.flip()
+
+    return text
 #database
 conn = pymysql.connect(
     host = '172.20.128.63',
@@ -19,6 +57,9 @@ finally:
 
 # Funksjon for å starte spillet
 def playGame():
+
+    username = show_popup(screen)
+    print("Username entered:", username)
     # Definerer vindusstørrelsen
     WINDOW_WIDTH = 1920
     WINDOW_HEIGHT = 1080
@@ -58,7 +99,7 @@ def playGame():
         if keys[pygame.K_d]:
             square_x += speed
         if keys[pygame.K_ESCAPE]:
-            pygame.QUIT()
+            in_options_menu = True
 
         # Sørger for at firkanten ikke går utenfor vinduet
         square_x = max(0, min(square_x, WINDOW_WIDTH - square_width))
@@ -106,6 +147,7 @@ in_options_menu = False
 optionMenuItems = ['Resolution', 'Sound', 'Controls', 'Back']
 selectedOptionItem = 0
 
+keys = pygame.key.get_pressed()
 # Hovedløkke for hovedmenyen
 Running = True
 while Running:
@@ -126,6 +168,7 @@ while Running:
                     elif selectedItem == 2:
                         pygame.quit()
                         sys.exit()
+
         elif in_options_menu:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_DOWN:
@@ -137,6 +180,9 @@ while Running:
                         changeRes()
                     if selectedOptionItem == 3:  # Back option selected
                         in_options_menu = False
+                elif event.key == pygame.K_BACKSPACE:
+                    in_options_menu = False
+               
 
     # Tegne menyen
     if not in_options_menu:
