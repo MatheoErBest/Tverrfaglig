@@ -1,9 +1,12 @@
 import pygame
 import pymysql
 import sys
-
+#Farger
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)  
+brukernavn = False
 def show_popup(screen):
-    input_box = pygame.Rect(100, 100, 140, 32)
+    input_box = pygame.Rect(100, 150, 140, 32)
     color_inactive = pygame.Color('lightskyblue3')
     color_active = pygame.Color('dodgerblue2')
     color = color_inactive
@@ -26,12 +29,19 @@ def show_popup(screen):
                 if active:
                     if event.key == pygame.K_RETURN:
                         done = True
+                        brukernavn = True
                     elif event.key == pygame.K_BACKSPACE:
                         text = text[:-1]
                     else:
                         text += event.unicode
 
         screen.fill((30, 30, 30))
+        
+        # Endret vertikal posisjon til 100 for å plassere teksten over input-boksen
+        font = pygame.font.Font(None, 24)
+        text_surface = font.render("Enter your username:", True, (255, 255, 255))
+        screen.blit(text_surface, (100, 100))  # Endret posisjonen til 100
+        
         txt_surface = pygame.font.Font(None, 32).render(text, True, color)
         width = max(200, txt_surface.get_width()+10)
         input_box.w = width
@@ -40,6 +50,7 @@ def show_popup(screen):
         pygame.display.flip()
 
     return text
+
 #database
 conn = pymysql.connect(
     host = '172.20.128.63',
@@ -57,19 +68,18 @@ finally:
 
 # Funksjon for å starte spillet
 def playGame():
-
-    username = show_popup(screen)
-    print("Username entered:", username)
+    if brukernavn == False:
+        username = show_popup(screen)
+        print("Username entered:", username)
     # Definerer vindusstørrelsen
-    WINDOW_WIDTH = 900
-    WINDOW_HEIGHT = 1000
+    WINDOW_WIDTH = 1080
+    WINDOW_HEIGHT = 700
 
     # Lager vinduet til programmet
     win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
     # Farger
-    WHITE = (255, 255, 255)
-    RED = (255, 0, 0)  # Fargen til firkanten
+    
 
     # Setter firkantens posisjon og størrelse
     square_x = 100
@@ -117,7 +127,7 @@ def playGame():
 # Display
 pygame.init()
 clock = pygame.time.Clock()
-screenX, screenY = 900, 1000
+screenX, screenY = 1080, 700
 screen = pygame.display.set_mode((screenX, screenY))
 pygame.display.set_caption('Super Duper Kul')
 
