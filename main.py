@@ -4,7 +4,7 @@ import sys
 
 #database
 conn = pymysql.connect(
-    host = '127.0.0.1',
+    host = '172.20.128.63',
     user = 'matheo',
     password = '123Akademiet',
     database = 'score',
@@ -13,7 +13,7 @@ conn = pymysql.connect(
 try:
     with conn.cursor() as cursor:
         pass
-    
+
 finally:
     conn.close()
 
