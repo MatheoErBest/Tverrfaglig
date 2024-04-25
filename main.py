@@ -1,17 +1,19 @@
 import pygame
 import pymysql
 import sys
-#Farger
+
+# Farger
 WHITE = (255, 255, 255)
-RED = (255, 0, 0)  
-brukernavn = False
+RED = (255, 0, 0)
+
+# Funksjon for å vise popup-vinduet
 def show_popup(screen):
     input_box = pygame.Rect(100, 150, 140, 32)
     color_inactive = pygame.Color('lightskyblue3')
     color_active = pygame.Color('dodgerblue2')
     color = color_inactive
     active = False
-    text = ''
+    user_input = ''
     done = False
 
     while not done:
@@ -29,48 +31,50 @@ def show_popup(screen):
                 if active:
                     if event.key == pygame.K_RETURN:
                         done = True
-                        brukernavn = True
                     elif event.key == pygame.K_BACKSPACE:
-                        text = text[:-1]
+                        user_input = user_input[:-1]
                     else:
-                        text += event.unicode
+                        user_input += event.unicode
 
         screen.fill((30, 30, 30))
         
-        # Endret vertikal posisjon til 100 for å plassere teksten over input-boksen
         font = pygame.font.Font(None, 24)
         text_surface = font.render("Enter your username:", True, (255, 255, 255))
-        screen.blit(text_surface, (100, 100))  # Endret posisjonen til 100
+        screen.blit(text_surface, (100, 100))
         
-        txt_surface = pygame.font.Font(None, 32).render(text, True, color)
+        txt_surface = pygame.font.Font(None, 32).render(user_input, True, color)
         width = max(200, txt_surface.get_width()+10)
         input_box.w = width
         screen.blit(txt_surface, (input_box.x+5, input_box.y+5))
         pygame.draw.rect(screen, color, input_box, 2)
         pygame.display.flip()
 
-    return text
+    return user_input
 
-#database
-conn = pymysql.connect(
-    host = '172.20.128.63',
-    user = 'matheo',
-    password = '123Akademiet',
-    database = 'score',
-)
+# Funksjon for å sette inn brukernavn i databasen
+def insert_username(username):
+    conn = pymysql.connect(
+        host='172.20.128.63',
+        user='matheo',
+        password='123Akademiet',
+        database='score',
+    )
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("INSERT INTO spilldata(id) VALUES (%s)", (username,))
+        conn.commit()
+    finally:
+        conn.close()
 
-try:
-    with conn.cursor() as cursor:
-        pass
+# Display
+pygame.init()
+screen = pygame.display.set_mode((300, 300))
+pygame.display.set_caption('Enter Username')
 
-finally:
-    conn.close()
 
 # Funksjon for å starte spillet
 def playGame():
-    if brukernavn == False:
-        username = show_popup(screen)
-        print("Username entered:", username)
+
     # Definerer vindusstørrelsen
     WINDOW_WIDTH = 1080
     WINDOW_HEIGHT = 700
@@ -180,6 +184,11 @@ while Running:
                     selectedItem = (selectedItem - 1) % len(menuItems)
                 elif event.key == pygame.K_RETURN:
                     if selectedItem == 0:
+                        # Vis popup-vinduet for å få brukernavnet
+                        username = show_popup(screen)
+
+                        # Sett inn brukernavnet i databasen
+                        insert_username(username)
                         playGame()  # Starter spillet når "Start game" er valgt
                     elif selectedItem == 1:
                         in_options_menu = True
