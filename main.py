@@ -61,8 +61,8 @@ def playGame():
     username = show_popup(screen)
     print("Username entered:", username)
     # Definerer vindusstørrelsen
-    WINDOW_WIDTH = 1920
-    WINDOW_HEIGHT = 1080
+    WINDOW_WIDTH = 900
+    WINDOW_HEIGHT = 1000
 
     # Lager vinduet til programmet
     win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -86,7 +86,7 @@ def playGame():
         # Hører etter hendelser
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.QUIT()
         
         # Håndterer tastetrykk
         keys = pygame.key.get_pressed()
@@ -99,7 +99,7 @@ def playGame():
         if keys[pygame.K_d]:
             square_x += speed
         if keys[pygame.K_ESCAPE]:
-            in_options_menu = True
+            running = False
 
         # Sørger for at firkanten ikke går utenfor vinduet
         square_x = max(0, min(square_x, WINDOW_WIDTH - square_width))
@@ -134,9 +134,17 @@ def screenUpdate():
     clock.tick(60)
 
 def changeRes():
-    global screenX, screenY
-    new_resolution = (screenX, screenY) if screenX != 900 else (1280, 720)
-    return new_resolution
+    res = 'liten'
+
+    if res == 'liten':
+        screenX, screenY = 1080, 1620
+        res = 'stor'
+        pygame.display.update()
+    
+    if res == 'stor':
+        screenX, screeny = 900, 1000
+        res = 'liten'
+        pygame.display.update()
 
 # Meny verdier
 menuItems = ['Start game', 'Options', 'Exit']
