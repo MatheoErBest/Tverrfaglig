@@ -51,8 +51,10 @@ def show_popup(screen):
 
     return user_input
 
+
+
 # Funksjon for å sette inn brukernavn i databasen
-def insert_username(username):
+def insert_username(username, highscore):
     conn = pymysql.connect(
         host='172.20.128.63',
         user='matheo',
@@ -61,7 +63,7 @@ def insert_username(username):
     )
     try:
         with conn.cursor() as cursor:
-            cursor.execute("INSERT INTO spilldata(id) VALUES (%s)", (username,))
+            cursor.execute("INSERT INTO spilldata(id, highscore) VALUES (%s, %s)", (username, highscore))
         conn.commit()
     finally:
         conn.close()
@@ -160,6 +162,8 @@ def changeRes():
         res = 'liten'
         pygame.display.update()
 
+highscore = 300
+
 # Meny verdier
 menuItems = ['Start game', 'Options', 'Exit']
 selectedItem = 0
@@ -188,7 +192,7 @@ while Running:
                         username = show_popup(screen)
 
                         # Sett inn brukernavnet i databasen
-                        insert_username(username)
+                        insert_username(username, highscore)
                         playGame()  # Starter spillet når "Start game" er valgt
                     elif selectedItem == 1:
                         in_options_menu = True
