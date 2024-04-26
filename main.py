@@ -51,10 +51,19 @@ def show_popup(screen):
 
     return user_input
 
+
+
 # Funksjon for å sette inn brukernavn i databasen og oppdatere Highscore
-def insert_username(username, highscore, conn):
+def insert_username(username, highscore):
+    conn = pymysql.connect(
+        host='172.20.128.63',
+        user='matheo',
+        password='123Akademiet',
+        database='score',
+    )
+
     with conn.cursor() as cursor:
-        # Check if the user already exists
+        # Sjekker om brukeren finnes
         cursor.execute("SELECT * FROM users WHERE id = %s", (username,))
         user = cursor.fetchone()
 
@@ -75,12 +84,16 @@ pygame.display.set_caption('Enter Username')
 
 # Funksjon for å starte spillet
 def playGame():
+
     # Definerer vindusstørrelsen
     WINDOW_WIDTH = 1080
     WINDOW_HEIGHT = 700
 
     # Lager vinduet til programmet
     win = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
+    # Farger
+    
 
     # Setter firkantens posisjon og størrelse
     square_x = 100
@@ -157,15 +170,6 @@ def changeRes():
         res = 'liten'
         pygame.display.update()
 
-# Opprett en database-sesjon
-conn = pymysql.connect(
-    host='172.20.128.63',
-    user='matheo',
-    password='123Akademiet',
-    database='score',
-)
-
-# Definere highscore
 highscore = 300
 
 # Meny verdier
@@ -196,7 +200,7 @@ while Running:
                         username = show_popup(screen)
 
                         # Sett inn brukernavnet i databasen
-                        insert_username(username, highscore, conn)
+                        insert_username(username, highscore)
                         playGame()  # Starter spillet når "Start game" er valgt
                     elif selectedItem == 1:
                         in_options_menu = True
