@@ -15,3 +15,6 @@ Om jeg skulle gjort noe annerlede ville det vært å bruke mer tid på prosjekte
 5. Er du skeptisk til noe?
 6. Er det lett å finne ut av bevegelse/navigasjon?
 7. Er det noe ekstra du vil kommentere på?
+
+# Egen testing
+Noen problemer jeg kan se for meg er litt frustrasjon da man skal skrive inn brukernavn siden du blir ikke satt inn i skrive feltet automatisk og det står ikke hvordan man skal gå videre som da ville vært enter, de fleste som har prøvd har ikke strevd med det, men det er noe jag kan se for meg. Noe annet er at da man trykker escape og går inn i spillet igjen må man starte på nytt og man må skrive inn et nytt brukernavn. Siden ingenting utenom 'Back§ knappen på innstilinger ikke funker har jeg sett at dette har fått de som har testet den til å tro at noe skal skje, men det egentilig ikke gjør.
